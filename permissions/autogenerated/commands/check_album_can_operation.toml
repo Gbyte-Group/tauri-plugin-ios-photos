@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-check-album-can-operation"
+description = "Enables the check_album_can_operation command without any pre-configured scope."
+commands.allow = ["check_album_can_operation"]
+
+[[permission]]
+identifier = "deny-check-album-can-operation"
+description = "Denies the check_album_can_operation command without any pre-configured scope."
+commands.deny = ["check_album_can_operation"]

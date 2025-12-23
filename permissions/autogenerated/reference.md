@@ -5,8 +5,10 @@ Default permissions for the plugin
 #### This default permission set includes the following:
 
 - `allow-request-photos-auth`
+- `allow-get-photos-auth-status`
 - `allow-request-albums`
 - `allow-request-album-medias`
+- `allow-check-album-can-operation`
 
 ## Permission Table
 
@@ -20,12 +22,12 @@ Default permissions for the plugin
 <tr>
 <td>
 
-`ios-photos:allow-ping`
+`ios-photos:allow-check-album-can-operation`
 
 </td>
 <td>
 
-Enables the ping command without any pre-configured scope.
+Enables the check_album_can_operation command without any pre-configured scope.
 
 </td>
 </tr>
@@ -33,12 +35,38 @@ Enables the ping command without any pre-configured scope.
 <tr>
 <td>
 
-`ios-photos:deny-ping`
+`ios-photos:deny-check-album-can-operation`
 
 </td>
 <td>
 
-Denies the ping command without any pre-configured scope.
+Denies the check_album_can_operation command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-get-photos-auth-status`
+
+</td>
+<td>
+
+Enables the get_photos_auth_status command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-get-photos-auth-status`
+
+</td>
+<td>
+
+Denies the get_photos_auth_status command without any pre-configured scope.
 
 </td>
 </tr>

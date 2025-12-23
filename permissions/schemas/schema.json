@@ -295,16 +295,28 @@
       "type": "string",
       "oneOf": [
         {
-          "description": "Enables the ping command without any pre-configured scope.",
+          "description": "Enables the check_album_can_operation command without any pre-configured scope.",
           "type": "string",
-          "const": "allow-ping",
-          "markdownDescription": "Enables the ping command without any pre-configured scope."
+          "const": "allow-check-album-can-operation",
+          "markdownDescription": "Enables the check_album_can_operation command without any pre-configured scope."
         },
         {
-          "description": "Denies the ping command without any pre-configured scope.",
+          "description": "Denies the check_album_can_operation command without any pre-configured scope.",
           "type": "string",
-          "const": "deny-ping",
-          "markdownDescription": "Denies the ping command without any pre-configured scope."
+          "const": "deny-check-album-can-operation",
+          "markdownDescription": "Denies the check_album_can_operation command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the get_photos_auth_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-get-photos-auth-status",
+          "markdownDescription": "Enables the get_photos_auth_status command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the get_photos_auth_status command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-get-photos-auth-status",
+          "markdownDescription": "Denies the get_photos_auth_status command without any pre-configured scope."
         },
         {
           "description": "Enables the request_album_medias command without any pre-configured scope.",
@@ -343,10 +355,10 @@
           "markdownDescription": "Denies the request_photos_auth command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-request-albums`\n- `allow-request-album-medias`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-request-albums`\n- `allow-request-album-medias`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`"
         }
       ]
     }

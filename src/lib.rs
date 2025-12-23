@@ -38,8 +38,10 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("ios-photos")
         .invoke_handler(tauri::generate_handler![
             commands::request_photos_auth,
+            commands::get_photos_auth_status,
             commands::request_albums,
-            commands::request_album_medias
+            commands::request_album_medias,
+            commands::check_album_can_operation,
         ])
         .setup(|app, api| {
             #[cfg(mobile)]

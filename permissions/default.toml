@@ -1,3 +1,9 @@
 [default]
 description = "Default permissions for the plugin"
-permissions = ["allow-request-photos-auth", "allow-request-albums", "allow-request-album-medias"]
+permissions = [
+  "allow-request-photos-auth",
+  "allow-get-photos-auth-status",
+  "allow-request-albums",
+  "allow-request-album-medias",
+  "allow-check-album-can-operation",
+]

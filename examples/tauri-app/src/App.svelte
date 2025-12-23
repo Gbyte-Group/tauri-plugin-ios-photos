@@ -2,9 +2,14 @@
   import Greet from './lib/Greet.svelte'
   import {
     PhotosAuthorizationStatus,
+    PHCollectionEditOperation,
+    PHAssetCollectionType,
+    PHAssetCollectionSubtype,
     requestPhotosAuth,
+    getPhotosAuthStatus,
     requestAlbums,
-    requestAlbumMedias
+    requestAlbumMedias,
+    checkAlbumCanOperation
   } from 'tauri-plugin-ios-photos-api'
 
   let response = $state('')
@@ -15,48 +20,69 @@
   let albums = $state([])
   let medias = $state([])
 
-  function updateResponse(returnValue) {
-    response +=
-      `[${new Date().toLocaleTimeString()}] ` +
-      (typeof returnValue === 'string' ? returnValue : JSON.stringify(returnValue)) +
-      '<br>'
-  }
-
-  function _ping() {
-    // ping('Pong!').then(updateResponse).catch(updateResponse)
+  function matchStatus(status) {
+    switch (status) {
+      case PhotosAuthorizationStatus.authorized:
+        photoAuth = '已授权'
+        break
+      case PhotosAuthorizationStatus.denied:
+        photoAuth = '拒绝'
+        break
+      case PhotosAuthorizationStatus.limited:
+        photoAuth = '被限制'
+        break
+      case PhotosAuthorizationStatus.restricted:
+        photoAuth = '有限的'
+        break
+      case PhotosAuthorizationStatus.notDetermined:
+        photoAuth = '非持久的'
+        break
+    }
   }
 
   function requestPhotoAuth() {
-    requestPhotosAuth().then((status) => {
-      switch (status) {
-        case PhotosAuthorizationStatus.authorized:
-          photoAuth = '已授权'
-          break
-        case PhotosAuthorizationStatus.denied:
-          photoAuth = '拒绝'
-          break
-        case PhotosAuthorizationStatus.limited:
-          photoAuth = '被限制'
-          break
-        case PhotosAuthorizationStatus.restricted:
-          photoAuth = '有限的'
-          break
-        case PhotosAuthorizationStatus.notDetermined:
-          photoAuth = '非持久的'
-          break
-      }
-    })
+    requestPhotosAuth().then(matchStatus)
   }
 
-  function getAlbums() {
-    requestAlbums().then((value) => {
+  function getPhotoAuthStatus() {
+    getPhotosAuthStatus().then(matchStatus)
+  }
+
+  function getSmartAlbums() {
+    requestAlbums({
+      with: PHAssetCollectionType.smartAlbum,
+      subtype: PHAssetCollectionSubtype.albumRegular
+    }).then((value) => {
       console.log({ value })
       albums = value
     })
   }
 
-  function requestMedia(id) {
-    console.log({ id })
+  function getAlbums() {
+    requestAlbums({
+      with: PHAssetCollectionType.album,
+      subtype: PHAssetCollectionSubtype.albumRegular
+    }).then((value) => {
+      console.log({ value })
+      albums = value
+    })
+  }
+
+  function requestMedia(id, title) {
+    response = ''
+    for (const [key, val] of Object.entries(PHCollectionEditOperation)) {
+      checkAlbumCanOperation({
+        id,
+        operation: val
+      })
+        .then((status) => {
+          response += `<br/>${title} ${key} status: [${status}]`
+        })
+        .catch((e) => {
+          console.log({ e })
+        })
+    }
+
     requestAlbumMedias({ id, height: 800, width: 800, quality: 0.9 })
       .then((v) => {
         console.log({ v })
@@ -114,16 +140,17 @@
   </div>
 
   <div>
-    <button onclick={_ping}>Ping</button>
+    <button onclick={getPhotoAuthStatus}>get status</button>
     <div>{@html response}</div>
     <button onclick={requestPhotoAuth}>requestPhotoAuth</button>
     <div>{@html photoAuth}</div>
-    <button onclick={getAlbums}>getAlbums</button>
+    <button onclick={getAlbums}>get normal albums</button>
+    <button onclick={getSmartAlbums}>get smart albums</button>
     <ul>
       {#each albums as album}
         <li
           style="height: 3rem; width: 100%; background: pink;"
-          onclick={() => requestMedia(album.id)}
+          onclick={() => requestMedia(album.id, album.name)}
         >
           {album.name}
         </li>

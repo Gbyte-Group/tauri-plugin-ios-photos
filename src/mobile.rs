@@ -32,9 +32,19 @@ impl<R: Runtime> IosPhotos<R> {
             .map_err(Into::into)
     }
 
-    pub async fn request_albums(&self) -> crate::Result<RequestAlbumsResponse> {
+    pub async fn get_photos_auth_status(&self) -> crate::Result<GetPhotosAuthStatusResponse> {
         self.0
-            .run_mobile_plugin_async("requestAlbums", ())
+            .run_mobile_plugin_async("getPhotosAuthStatus", ())
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn request_albums(
+        &self,
+        payload: RequestAlbumsRequest,
+    ) -> crate::Result<RequestAlbumsResponse> {
+        self.0
+            .run_mobile_plugin_async("requestAlbums", payload)
             .await
             .map_err(Into::into)
     }
@@ -45,6 +55,16 @@ impl<R: Runtime> IosPhotos<R> {
     ) -> crate::Result<RequestAlbumMediasResponse> {
         self.0
             .run_mobile_plugin_async("requestAlbumMedias", payload)
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn check_album_can_operation(
+        &self,
+        payload: CheckAlbumCanOperationRequest,
+    ) -> crate::Result<CheckAlbumCanOperationResponse> {
+        self.0
+            .run_mobile_plugin_async("checkAlbumCanOperation", payload)
             .await
             .map_err(Into::into)
     }

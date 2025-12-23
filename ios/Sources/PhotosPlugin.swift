@@ -4,8 +4,9 @@ import Tauri
 import UIKit
 import WebKit
 
-class PingArgs: Decodable {
-  let value: String?
+class GetAlbumArgs: Decodable {
+  let with: Int
+  let subtype: Int
 }
 
 class GetAlbumMediasArgs: Decodable {
@@ -13,6 +14,11 @@ class GetAlbumMediasArgs: Decodable {
   let height: Int
   let width: Int
   let quality: CGFloat
+}
+
+class CheckAlbumCanOperationArgs: Decodable {
+  let id: String
+  let operation: Int
 }
 
 public struct MediaItem: Encodable {
@@ -35,11 +41,19 @@ func requestPhotosAuthorization(_ handler: @escaping (PHAuthorizationStatus) -> 
   }
 }
 
-func getAlbums() -> [AblumItem] {
+func getPhotosAuthorizationStatus() -> PHAuthorizationStatus {
+  if #available(iOS 14, *) {
+    PHPhotoLibrary.authorizationStatus(for: .readWrite)
+  } else {
+    PHPhotoLibrary.authorizationStatus()
+  }
+}
+
+func getAlbums(_ with: PHAssetCollectionType, _ subtype: PHAssetCollectionSubtype) -> [AblumItem] {
   var result: [AblumItem] = []
 
   let albums = PHAssetCollection.fetchAssetCollections(
-    with: .smartAlbum, subtype: .albumRegular, options: nil)
+    with: with, subtype: subtype, options: nil)
 
   for i in 0..<albums.count {
     let album = albums[i]
@@ -119,22 +133,31 @@ func getAlbumMedias(id: String, targetSize: CGSize, quality: CGFloat = 0.8) -> [
 }
 
 class PhotosPlugin: Plugin {
-  @objc public func ping(_ invoke: Invoke) throws {
-    let args = try invoke.parseArgs(PingArgs.self)
-    invoke.resolve(["value": args.value ?? ""])
-  }
-
   @objc public func requestPhotosAuth(_ invoke: Invoke) throws {
     print("exec requestPhotosAuth methods")
 
     requestPhotosAuthorization { status in
-      invoke.resolve(["value": PHAuthorizationStatus.notDetermined])
+      invoke.resolve(["value": status.rawValue])
     }
   }
 
+  @objc public func getPhotosAuthStatus(_ invoke: Invoke) throws {
+    let status = getPhotosAuthorizationStatus()
+    invoke.resolve(["value": status.rawValue])
+  }
+
   @objc public func requestAlbums(_ invoke: Invoke) throws {
-    let albums = getAlbums()
-    invoke.resolve(["value": albums])
+    let args: GetAlbumArgs = try invoke.parseArgs(GetAlbumArgs.self)
+    guard let with = PHAssetCollectionType.init(rawValue: args.with) else {
+      invoke.reject("Not parse arg with \"\(args.with)\" to PHAssetCollectionType")
+      return
+    }
+    guard let subtype = PHAssetCollectionSubtype.init(rawValue: args.subtype) else {
+      invoke.reject("Not parse arg subtype \"\(args.subtype)\" to PHAssetCollectionSubtype")
+      return
+    }
+
+    invoke.resolve(["value": getAlbums(with, subtype)])
   }
 
   @objc public func requestAlbumMedias(_ invoke: Invoke) throws {
@@ -143,6 +166,30 @@ class PhotosPlugin: Plugin {
       "value": getAlbumMedias(
         id: args.id, targetSize: CGSize(width: args.width, height: args.height),
         quality: args.quality)
+    ])
+  }
+
+  @objc public func checkAlbumCanOperation(_ invoke: Invoke) throws {
+    let args: CheckAlbumCanOperationArgs = try invoke.parseArgs(CheckAlbumCanOperationArgs.self)
+
+    guard
+      let album = PHAssetCollection.fetchAssetCollections(
+        withLocalIdentifiers: [args.id], options: nil
+      ).firstObject
+    else {
+      // invoke.resolve(["value": false])
+      invoke.reject("Not found album by id \(args.id)")
+      return
+    }
+
+    guard let operation = PHCollectionEditOperation.init(rawValue: args.operation) else {
+      // invoke.resolve(["value": false])
+      invoke.reject("Need check input operation \(args.operation)")
+      return
+    }
+
+    invoke.resolve([
+      "value": album.canPerform(operation)
     ])
   }
 }
