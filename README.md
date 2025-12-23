@@ -4,11 +4,11 @@ Access and get iOS photos albums.
 
 ## Todos
 
-- [ ] Request access auth.
+- [x] Request access auth.
 - [ ] Check auth type.
-- [ ] List user device albums.
-- [ ] Get photos from album.
-- [ ] Access photo.
+- [x] List user device albums.
+- [x] Get photos from album.
+- [x] Access photo.
 - [ ] Create album.
 - [ ] Create photo.
 - [ ] Remove album.
