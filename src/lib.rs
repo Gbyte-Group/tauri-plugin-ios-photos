@@ -13,6 +13,7 @@ mod mobile;
 mod commands;
 mod error;
 mod models;
+mod protocol;
 
 pub use error::{Error, Result};
 
@@ -32,13 +33,14 @@ impl<R: Runtime, T: Manager<R>> crate::IosPhotosExt<R> for T {
     }
 }
 
-#[cfg(target_os = "ios")]
-tauri::ios_plugin_binding!(init_plugin_ios_photos);
-
 /// Initializes the plugin.
 pub fn init<R: Runtime>() -> TauriPlugin<R> {
     Builder::new("ios-photos")
-        .invoke_handler(tauri::generate_handler![commands::ping])
+        .invoke_handler(tauri::generate_handler![
+            commands::request_photos_auth,
+            commands::request_albums,
+            commands::request_album_medias
+        ])
         .setup(|app, api| {
             #[cfg(mobile)]
             let ios_photos = mobile::init(app, api)?;
@@ -47,5 +49,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             app.manage(ios_photos);
             Ok(())
         })
+        .register_uri_scheme_protocol(protocol::CUSTOM_PROTOCOL, protocol::register_protocol)
         .build()
 }

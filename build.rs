@@ -1,4 +1,8 @@
-const COMMANDS: &[&str] = &["ping"];
+const COMMANDS: &[&str] = &[
+  "request_photos_auth",
+  "request_albums",
+  "request_album_medias",
+];
 
 fn main() {
   tauri_plugin::Builder::new(COMMANDS)

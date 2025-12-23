@@ -307,10 +307,46 @@
           "markdownDescription": "Denies the ping command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`",
+          "description": "Enables the request_album_medias command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-request-album-medias",
+          "markdownDescription": "Enables the request_album_medias command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the request_album_medias command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-request-album-medias",
+          "markdownDescription": "Denies the request_album_medias command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the request_albums command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-request-albums",
+          "markdownDescription": "Enables the request_albums command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the request_albums command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-request-albums",
+          "markdownDescription": "Denies the request_albums command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the request_photos_auth command without any pre-configured scope.",
+          "type": "string",
+          "const": "allow-request-photos-auth",
+          "markdownDescription": "Enables the request_photos_auth command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the request_photos_auth command without any pre-configured scope.",
+          "type": "string",
+          "const": "deny-request-photos-auth",
+          "markdownDescription": "Denies the request_photos_auth command without any pre-configured scope."
+        },
+        {
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-request-albums`\n- `allow-request-album-medias`",
           "type": "string",
           "const": "default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-ping`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-request-albums`\n- `allow-request-album-medias`"
         }
       ]
     }
