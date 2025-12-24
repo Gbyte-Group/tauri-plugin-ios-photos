@@ -1,5 +1,10 @@
 import { invoke } from '@tauri-apps/api/core'
 
+/**
+ * Information about your app’s authorization to access the user’s photo library.
+ *
+ * @see [PHAuthorizationStatus](https://developer.apple.com/documentation/photos/phauthorizationstatus)
+ */
 export const PhotosAuthorizationStatus = {
   notDetermined: 0,
   restricted: 1,
@@ -8,6 +13,11 @@ export const PhotosAuthorizationStatus = {
   limited: 4
 } as const satisfies Record<string, number>
 
+/**
+ * Values identifying possible actions that a collection can support.
+ *
+ * @see [PHCollectionEditOperation](https://developer.apple.com/documentation/photos/phcollectioneditoperation)
+ */
 export const PHCollectionEditOperation = {
   deleteContent: 1,
   removeContent: 2,
@@ -18,11 +28,27 @@ export const PHCollectionEditOperation = {
   rename: 7
 } as const satisfies Record<string, number>
 
+/**
+ * Major distinctions between kinds of asset collections.
+ *
+ * @see [PHAssetCollectionType](https://developer.apple.com/documentation/photos/phassetcollectiontype)
+ */
 export const PHAssetCollectionType = {
+  /**
+   * An album in the Photos app.
+   */
   album: 1,
+  /**
+   * A smart album whose contents update dynamically.
+   */
   smartAlbum: 2
 } as const satisfies Record<string, number>
 
+/**
+ * Minor distinctions between kinds of asset collections.
+ *
+ * @see [PHAssetCollectionSubtype](https://developer.apple.com/documentation/photos/phassetcollectionsubtype)
+ */
 export const PHAssetCollectionSubtype = {
   albumRegular: 2,
   albumSyncedEvent: 3,
@@ -121,6 +147,11 @@ export type PluginReturnValue<T> = {
   value?: T
 }
 
+/**
+ * request photo auth
+ *
+ * @returns auth status
+ */
 export async function requestPhotosAuth(): Promise<PhotosAuthorizationStatus | null> {
   return await invoke<PluginReturnValue<PhotosAuthorizationStatus>>(
     'plugin:ios-photos|request_photos_auth',
@@ -128,6 +159,11 @@ export async function requestPhotosAuth(): Promise<PhotosAuthorizationStatus | n
   ).then((r) => r.value ?? null)
 }
 
+/**
+ * get authorized status
+ *
+ * @returns auth status
+ */
 export async function getPhotosAuthStatus(): Promise<PhotosAuthorizationStatus | null> {
   return await invoke<PluginReturnValue<PhotosAuthorizationStatus>>(
     'plugin:ios-photos|get_photos_auth_status',
@@ -135,18 +171,36 @@ export async function getPhotosAuthStatus(): Promise<PhotosAuthorizationStatus |
   ).then((r) => r.value ?? null)
 }
 
+/**
+ * request user device albums
+ *
+ * @param payload request payload
+ * @returns album list
+ */
 export async function requestAlbums(payload: RequestAlbumRequest): Promise<AlbumItem[]> {
   return await invoke<PluginReturnValue<AlbumItem[]>>('plugin:ios-photos|request_albums', {
     payload
   }).then((r) => r.value ?? [])
 }
 
+/**
+ * request user medias by album
+ *
+ * @param payload request payload
+ * @returns album contain medias list
+ */
 export async function requestAlbumMedias(payload: RequestAlbumMediasRequest): Promise<MediaItem[]> {
   return await invoke<PluginReturnValue<MediaItem[]>>('plugin:ios-photos|request_album_medias', {
     payload
   }).then((r) => r.value ?? [])
 }
 
+/**
+ * check album support operation status
+ *
+ * @param payload request payload
+ * @returns does the album support operation status
+ */
 export async function checkAlbumCanOperation(
   payload: CheckAlbumCanOperationRequest
 ): Promise<boolean> {
@@ -155,34 +209,72 @@ export async function checkAlbumCanOperation(
   }).then((r) => r.value ?? false)
 }
 
+/**
+ * create album
+ *
+ * @param payload request payload
+ * @returns created album identifier
+ */
 export async function createAlbum(payload: CreateAlbumRequest): Promise<Identifier | null> {
   return await invoke<PluginReturnValue<Identifier>>('plugin:ios-photos|create_album', {
     payload
   }).then((r) => r.value ?? null)
 }
+
+/**
+ * create photo to album
+ *
+ * @param payload request payload
+ * @returns created photos identifiers
+ */
 export async function createPhotos(payload: CreateMediaRequest): Promise<Identifiers | null> {
   return await invoke<PluginReturnValue<Identifiers>>('plugin:ios-photos|create_photos', {
     payload
   }).then((r) => r.value ?? [])
 }
+
+/**
+ * create videos to album
+ *
+ * @param payload request payload
+ * @returns created videos identifiers
+ */
 export async function createVideos(payload: CreateMediaRequest): Promise<Identifiers | null> {
   return await invoke<PluginReturnValue<Identifiers>>('plugin:ios-photos|create_videos', {
     payload
   }).then((r) => r.value ?? [])
 }
 
+/**
+ * delete album, is forever
+ *
+ * @param payload request payload
+ * @returns was the delete album success
+ */
 export async function deleteAlbum(payload: DeleteAlbumRequest): Promise<boolean> {
   return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|delete_album', {
     payload
   }).then((r) => r.value ?? false)
 }
 
+/**
+ * delete medias from album, is forever
+ *
+ * @param payload request payload
+ * @returns was the delete album medias success
+ */
 export async function deleteAlbumMedias(payload: DeleteAlbumMediasRequest): Promise<boolean> {
   return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|delete_album_medias', {
     payload
   }).then((r) => r.value ?? false)
 }
 
+/**
+ * remove medias from album , is not forever
+ *
+ * @param payload request payload
+ * @returns was the remove album medias success
+ */
 export async function removeAlbumMedias(payload: DeleteAlbumMediasRequest): Promise<boolean> {
   return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|remove_album_medias', {
     payload
