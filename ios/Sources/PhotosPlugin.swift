@@ -30,6 +30,15 @@ class CreateMediaArgs: Decodable {
   let files: [String]
 }
 
+class DeleteAlbumArgs: Decodable {
+  let identifiers: [String]
+}
+
+class DeleteMediasArgs: Decodable {
+  let album: String
+  let identifiers: [String]
+}
+
 public struct MediaItem: Encodable {
   public let id: String
   public let mediaType: Int
@@ -191,6 +200,68 @@ func createMedias(_ invoke: Invoke, _ isPhoto: Bool) throws {
   }
 }
 
+func deleteMedias(_ invoke: Invoke) throws {
+  let args: DeleteMediasArgs = try invoke.parseArgs(DeleteMediasArgs.self)
+
+  guard
+    let album = PHAssetCollection.fetchAssetCollections(
+      withLocalIdentifiers: [args.album], options: nil
+    ).firstObject
+  else {
+    invoke.reject("not found album")
+    return
+  }
+
+  PHPhotoLibrary.shared().performChanges {
+    let assets = PHAsset.fetchAssets(withLocalIdentifiers: args.identifiers, options: nil)
+
+    PHAssetChangeRequest.deleteAssets(assets)
+  } completionHandler: { success, error in
+    if success {
+      invoke.resolve(["value": true])
+    } else {
+      invoke.reject("delete failed, \(String(describing: error))")
+    }
+  }
+
+}
+
+func removeMediasFromAlbum(_ invoke: Invoke) throws {
+  let args: DeleteMediasArgs = try invoke.parseArgs(DeleteMediasArgs.self)
+
+  guard
+    let album = PHAssetCollection.fetchAssetCollections(
+      withLocalIdentifiers: [args.album], options: nil
+    ).firstObject
+  else {
+    invoke.reject(
+      "not found album by \"\(args.album)\""
+    )
+    return
+  }
+
+  PHPhotoLibrary.shared().performChanges {
+    guard
+      let removeAssetRequest = PHAssetCollectionChangeRequest(
+        for: album)
+    else {
+      invoke.reject("Create remove asset request failed")
+      return
+    }
+
+    let assets = PHAsset.fetchAssets(withLocalIdentifiers: args.identifiers, options: nil)
+
+    removeAssetRequest.removeAssets(assets)
+
+  } completionHandler: { success, error in
+    if success {
+      invoke.resolve(["value": true])
+    } else {
+      invoke.reject("delete failed, \(String(describing: error))")
+    }
+  }
+}
+
 class PhotosPlugin: Plugin {
   @objc public func requestPhotosAuth(_ invoke: Invoke) throws {
     print("exec requestPhotosAuth methods")
@@ -281,6 +352,39 @@ class PhotosPlugin: Plugin {
     try createMedias(invoke, false)
   }
 
+  @objc public func deleteAlbum(_ invoke: Invoke) throws {
+    let args: DeleteAlbumArgs = try invoke.parseArgs(DeleteAlbumArgs.self)
+
+    if args.identifiers.isEmpty {
+      invoke.resolve(["value": true])
+
+      return
+    }
+
+    PHPhotoLibrary.shared().performChanges(
+      {
+        let albums = PHAssetCollection.fetchAssetCollections(
+          withLocalIdentifiers: args.identifiers, options: nil
+        )
+
+        PHAssetCollectionChangeRequest.deleteAssetCollections(albums)
+      },
+      completionHandler: { success, error in
+        if success {
+          invoke.resolve(["value": true])
+        } else {
+          invoke.reject("delete albums failed \(String(describing: error))")
+        }
+      })
+  }
+
+  @objc public func deleteAlbumMedias(_ invoke: Invoke) throws {
+    try deleteMedias(invoke)
+  }
+
+  @objc public func removeAlbumMedias(_ invoke: Invoke) throws {
+    try removeMediasFromAlbum(invoke)
+  }
 }
 
 @_cdecl("init_plugin_ios_photos")

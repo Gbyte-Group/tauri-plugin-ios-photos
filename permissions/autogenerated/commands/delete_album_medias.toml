@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-delete-album-medias"
+description = "Enables the delete_album_medias command without any pre-configured scope."
+commands.allow = ["delete_album_medias"]
+
+[[permission]]
+identifier = "deny-delete-album-medias"
+description = "Denies the delete_album_medias command without any pre-configured scope."
+commands.deny = ["delete_album_medias"]

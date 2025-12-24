@@ -98,3 +98,28 @@ pub struct CreateMediaRequest {
 pub struct CreateMediaResponse {
     pub value: Vec<String>,
 }
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteAlbumsRequest {
+    pub identifiers: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteAlbumsResponse {
+    pub value: bool,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteAlbumMediasRequest {
+    pub album: String,
+    pub identifiers: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DeleteAlbumMediasResponse {
+    pub value: bool,
+}

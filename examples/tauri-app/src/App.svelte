@@ -11,7 +11,10 @@
     requestAlbumMedias,
     checkAlbumCanOperation,
     createPhotos,
-    createVideos
+    createVideos,
+    deleteAlbum,
+    deleteAlbumMedias,
+    removeAlbumMedias
   } from 'tauri-plugin-ios-photos-api'
 
   let response = $state('')
@@ -27,6 +30,7 @@
    * @type { import('tauri-plugin-ios-photos-api').MediaItem[] }
    */
   let medias = $state([])
+  let selectAlbumId = $state('')
 
   function matchStatus(status) {
     switch (status) {
@@ -94,6 +98,7 @@
     requestAlbumMedias({ id, height: 800, width: 800, quality: 0.9 })
       .then((v) => {
         console.log({ v })
+        selectAlbumId = id
         medias = v
       })
       .catch((e) => {
@@ -116,6 +121,50 @@
       console.log({ ids })
       msg += '<br/>' + ids.join('<br/>')
     })
+  }
+
+  function deleteSelectAlbum(id) {
+    deleteAlbum({ identifiers: [id] })
+      .then((r) => {
+        msg += '<br/>' + `delete album by ${id} [${r ? 'success' : 'fail'}] <br/>`
+      })
+      .catch((e) => {
+        msg += '<br/>' + `delete album by ${id} error: ${e?.message ?? e} <br/>`
+      })
+  }
+
+  function deleteSelectAlbumMedias(medias) {
+    deleteAlbumMedias({
+      album: selectAlbumId,
+      identifiers: medias
+    })
+      .then((r) => {
+        msg +=
+          '<br/>' +
+          `delete album ${selectAlbumId} medias by ${medias.join('<br/><hr/><br/>')} [${r ? 'success' : 'fail'}] <br/>`
+      })
+      .catch((e) => {
+        msg +=
+          '<br/>' +
+          `delete album ${selectAlbumId} medias by ${medias.join('<br/><hr/><br/>')} error: ${e?.message ?? e} <br/>`
+      })
+  }
+
+  function removeSelectAlbumMedias(medias) {
+    removeAlbumMedias({
+      album: selectAlbumId,
+      identifiers: medias
+    })
+      .then((r) => {
+        msg +=
+          '<br/>' +
+          `delete album ${selectAlbumId} medias by ${medias.join('<br/><hr/><br/>')} [${r ? 'success' : 'fail'}] <br/>`
+      })
+      .catch((e) => {
+        msg +=
+          '<br/>' +
+          `delete album ${selectAlbumId} medias by ${medias.join('<br/><hr/><br/>')} error: ${e?.message ?? e} <br/>`
+      })
   }
 </script>
 
@@ -180,6 +229,7 @@
           onclick={() => requestMedia(album.id, album.name)}
         >
           {album.name}
+          <button onclick={() => deleteSelectAlbum(album.id)}>delete this album</button>
         </li>
       {/each}
     </ul>
@@ -190,6 +240,8 @@
             src={`temp:/${media?.data ?? ''}`}
             alt={media.id}
           />
+          <button onclick={() => deleteSelectAlbumMedias([media.id])}>delete</button>
+          <button onclick={() => removeSelectAlbumMedias([media.id])}>remove</button>
         </li>
       {/each}
     </ul>

@@ -45,6 +45,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             commands::create_album,
             commands::create_photos,
             commands::create_videos,
+            commands::delete_album,
+            commands::delete_album_medias,
+            commands::remove_album_medias
         ])
         .setup(|app, api| {
             #[cfg(mobile)]

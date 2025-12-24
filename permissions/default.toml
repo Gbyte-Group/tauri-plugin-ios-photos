@@ -9,4 +9,7 @@ permissions = [
   "allow-create-album",
   "allow-create-photos",
   "allow-create-videos",
+  "allow-delete-album-medias",
+  "allow-delete-album",
+  "allow-remove-album-medias",
 ]

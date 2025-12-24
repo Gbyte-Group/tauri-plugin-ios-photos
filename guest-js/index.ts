@@ -108,28 +108,41 @@ export type Identifier = string
 
 export type Identifiers = Identifier[]
 
+export type DeleteAlbumRequest = {
+  identifiers: Identifiers
+}
+
+export type DeleteAlbumMediasRequest = {
+  album: string
+  identifiers: Identifiers
+}
+
+export type PluginReturnValue<T> = {
+  value?: T
+}
+
 export async function requestPhotosAuth(): Promise<PhotosAuthorizationStatus | null> {
-  return await invoke<{ value?: PhotosAuthorizationStatus }>(
+  return await invoke<PluginReturnValue<PhotosAuthorizationStatus>>(
     'plugin:ios-photos|request_photos_auth',
     { payload: {} }
   ).then((r) => r.value ?? null)
 }
 
 export async function getPhotosAuthStatus(): Promise<PhotosAuthorizationStatus | null> {
-  return await invoke<{ value?: PhotosAuthorizationStatus }>(
+  return await invoke<PluginReturnValue<PhotosAuthorizationStatus>>(
     'plugin:ios-photos|get_photos_auth_status',
     { payload: {} }
   ).then((r) => r.value ?? null)
 }
 
 export async function requestAlbums(payload: RequestAlbumRequest): Promise<AlbumItem[]> {
-  return await invoke<{ value?: AlbumItem[] }>('plugin:ios-photos|request_albums', {
+  return await invoke<PluginReturnValue<AlbumItem[]>>('plugin:ios-photos|request_albums', {
     payload
   }).then((r) => r.value ?? [])
 }
 
 export async function requestAlbumMedias(payload: RequestAlbumMediasRequest): Promise<MediaItem[]> {
-  return await invoke<{ value?: MediaItem[] }>('plugin:ios-photos|request_album_medias', {
+  return await invoke<PluginReturnValue<MediaItem[]>>('plugin:ios-photos|request_album_medias', {
     payload
   }).then((r) => r.value ?? [])
 }
@@ -137,23 +150,41 @@ export async function requestAlbumMedias(payload: RequestAlbumMediasRequest): Pr
 export async function checkAlbumCanOperation(
   payload: CheckAlbumCanOperationRequest
 ): Promise<boolean> {
-  return await invoke<{ value?: boolean }>('plugin:ios-photos|check_album_can_operation', {
+  return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|check_album_can_operation', {
     payload
   }).then((r) => r.value ?? false)
 }
 
 export async function createAlbum(payload: CreateAlbumRequest): Promise<Identifier | null> {
-  return await invoke<{ value?: Identifier }>('plugin:ios-photos|create_album', { payload }).then(
-    (r) => r.value ?? null
-  )
+  return await invoke<PluginReturnValue<Identifier>>('plugin:ios-photos|create_album', {
+    payload
+  }).then((r) => r.value ?? null)
 }
 export async function createPhotos(payload: CreateMediaRequest): Promise<Identifiers | null> {
-  return await invoke<{ value?: Identifiers }>('plugin:ios-photos|create_photos', { payload }).then(
-    (r) => r.value ?? []
-  )
+  return await invoke<PluginReturnValue<Identifiers>>('plugin:ios-photos|create_photos', {
+    payload
+  }).then((r) => r.value ?? [])
 }
 export async function createVideos(payload: CreateMediaRequest): Promise<Identifiers | null> {
-  return await invoke<{ value?: Identifiers }>('plugin:ios-photos|create_videos', { payload }).then(
-    (r) => r.value ?? []
-  )
+  return await invoke<PluginReturnValue<Identifiers>>('plugin:ios-photos|create_videos', {
+    payload
+  }).then((r) => r.value ?? [])
+}
+
+export async function deleteAlbum(payload: DeleteAlbumRequest): Promise<boolean> {
+  return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|delete_album', {
+    payload
+  }).then((r) => r.value ?? false)
+}
+
+export async function deleteAlbumMedias(payload: DeleteAlbumMediasRequest): Promise<boolean> {
+  return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|delete_album_medias', {
+    payload
+  }).then((r) => r.value ?? false)
+}
+
+export async function removeAlbumMedias(payload: DeleteAlbumMediasRequest): Promise<boolean> {
+  return await invoke<PluginReturnValue<boolean>>('plugin:ios-photos|remove_album_medias', {
+    payload
+  }).then((r) => r.value ?? false)
 }

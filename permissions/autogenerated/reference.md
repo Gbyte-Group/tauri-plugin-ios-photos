@@ -12,6 +12,9 @@ Default permissions for the plugin
 - `allow-create-album`
 - `allow-create-photos`
 - `allow-create-videos`
+- `allow-delete-album-medias`
+- `allow-delete-album`
+- `allow-remove-album-medias`
 
 ## Permission Table
 
@@ -129,6 +132,58 @@ Denies the create_videos command without any pre-configured scope.
 <tr>
 <td>
 
+`ios-photos:allow-delete-album`
+
+</td>
+<td>
+
+Enables the delete_album command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-delete-album`
+
+</td>
+<td>
+
+Denies the delete_album command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-delete-album-medias`
+
+</td>
+<td>
+
+Enables the delete_album_medias command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-delete-album-medias`
+
+</td>
+<td>
+
+Denies the delete_album_medias command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `ios-photos:allow-get-photos-auth-status`
 
 </td>
@@ -148,6 +203,32 @@ Enables the get_photos_auth_status command without any pre-configured scope.
 <td>
 
 Denies the get_photos_auth_status command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-remove-album-medias`
+
+</td>
+<td>
+
+Enables the remove_album_medias command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-remove-album-medias`
+
+</td>
+<td>
+
+Denies the remove_album_medias command without any pre-configured scope.
 
 </td>
 </tr>

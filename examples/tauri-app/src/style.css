@@ -100,3 +100,20 @@ button {
     background-color: #0f0f0f98;
   }
 }
+
+ul {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+  li {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-flow: nowrap row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

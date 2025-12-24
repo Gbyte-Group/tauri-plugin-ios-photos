@@ -7,6 +7,9 @@ const COMMANDS: &[&str] = &[
     "create_album",
     "create_photos",
     "create_videos",
+    "delete_album",
+    "delete_album_medias",
+    "remove_album_medias",
 ];
 
 fn main() {

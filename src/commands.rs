@@ -66,3 +66,27 @@ pub(crate) async fn create_videos<R: Runtime>(
 ) -> Result<CreateMediaResponse> {
     app.ios_photos().create_videos(payload).await
 }
+
+#[command]
+pub(crate) async fn delete_album<R: Runtime>(
+    app: AppHandle<R>,
+    payload: DeleteAlbumsRequest,
+) -> crate::Result<DeleteAlbumsResponse> {
+    app.ios_photos().delete_album(payload).await
+}
+
+#[command]
+pub(crate) async fn delete_album_medias<R: Runtime>(
+    app: AppHandle<R>,
+    payload: DeleteAlbumMediasRequest,
+) -> crate::Result<DeleteAlbumMediasResponse> {
+    app.ios_photos().delete_album_medias(payload).await
+}
+
+#[command]
+pub(crate) async fn remove_album_medias<R: Runtime>(
+    app: AppHandle<R>,
+    payload: DeleteAlbumMediasRequest,
+) -> crate::Result<DeleteAlbumMediasResponse> {
+    app.ios_photos().remove_album_medias(payload).await
+}

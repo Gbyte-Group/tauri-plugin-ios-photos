@@ -98,4 +98,34 @@ impl<R: Runtime> IosPhotos<R> {
             .await
             .map_err(Into::into)
     }
+
+    pub async fn delete_album(
+        &self,
+        payload: DeleteAlbumsRequest,
+    ) -> crate::Result<DeleteAlbumsResponse> {
+        self.0
+            .run_mobile_plugin_async("deleteAlbum", payload)
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn delete_album_medias(
+        &self,
+        payload: DeleteAlbumMediasRequest,
+    ) -> crate::Result<DeleteAlbumMediasResponse> {
+        self.0
+            .run_mobile_plugin_async("deleteAlbumMedias", payload)
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn remove_album_medias(
+        &self,
+        payload: DeleteAlbumMediasRequest,
+    ) -> crate::Result<DeleteAlbumMediasResponse> {
+        self.0
+            .run_mobile_plugin_async("removeAlbumMedias", payload)
+            .await
+            .map_err(Into::into)
+    }
 }
