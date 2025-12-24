@@ -9,6 +9,9 @@ Default permissions for the plugin
 - `allow-request-albums`
 - `allow-request-album-medias`
 - `allow-check-album-can-operation`
+- `allow-create-album`
+- `allow-create-photos`
+- `allow-create-videos`
 
 ## Permission Table
 
@@ -41,6 +44,84 @@ Enables the check_album_can_operation command without any pre-configured scope.
 <td>
 
 Denies the check_album_can_operation command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-create-album`
+
+</td>
+<td>
+
+Enables the create_album command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-create-album`
+
+</td>
+<td>
+
+Denies the create_album command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-create-photos`
+
+</td>
+<td>
+
+Enables the create_photos command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-create-photos`
+
+</td>
+<td>
+
+Denies the create_photos command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:allow-create-videos`
+
+</td>
+<td>
+
+Enables the create_videos command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`ios-photos:deny-create-videos`
+
+</td>
+<td>
+
+Denies the create_videos command without any pre-configured scope.
 
 </td>
 </tr>

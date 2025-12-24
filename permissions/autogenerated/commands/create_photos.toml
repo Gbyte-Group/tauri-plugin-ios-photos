@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-create-photos"
+description = "Enables the create_photos command without any pre-configured scope."
+commands.allow = ["create_photos"]
+
+[[permission]]
+identifier = "deny-create-photos"
+description = "Denies the create_photos command without any pre-configured scope."
+commands.deny = ["create_photos"]

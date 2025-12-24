@@ -4,6 +4,9 @@ const COMMANDS: &[&str] = &[
     "request_album_medias",
     "check_album_can_operation",
     "get_photos_auth_status",
+    "create_album",
+    "create_photos",
+    "create_videos",
 ];
 
 fn main() {

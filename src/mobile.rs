@@ -68,4 +68,34 @@ impl<R: Runtime> IosPhotos<R> {
             .await
             .map_err(Into::into)
     }
+
+    pub async fn create_album(
+        &self,
+        payload: CreateAlbumRequest,
+    ) -> crate::Result<CreateAlbumResponse> {
+        self.0
+            .run_mobile_plugin_async("createAlbum", payload)
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn create_photos(
+        &self,
+        payload: CreateMediaRequest,
+    ) -> crate::Result<CreateMediaResponse> {
+        self.0
+            .run_mobile_plugin_async("createPhotos", payload)
+            .await
+            .map_err(Into::into)
+    }
+
+    pub async fn create_videos(
+        &self,
+        payload: CreateMediaRequest,
+    ) -> crate::Result<CreateMediaResponse> {
+        self.0
+            .run_mobile_plugin_async("createVideos", payload)
+            .await
+            .map_err(Into::into)
+    }
 }

@@ -42,3 +42,27 @@ pub(crate) async fn check_album_can_operation<R: Runtime>(
 ) -> Result<CheckAlbumCanOperationResponse> {
     app.ios_photos().check_album_can_operation(payload).await
 }
+
+#[command]
+pub(crate) async fn create_album<R: Runtime>(
+    app: AppHandle<R>,
+    payload: CreateAlbumRequest,
+) -> Result<CreateAlbumResponse> {
+    app.ios_photos().create_album(payload).await
+}
+
+#[command]
+pub(crate) async fn create_photos<R: Runtime>(
+    app: AppHandle<R>,
+    payload: CreateMediaRequest,
+) -> Result<CreateMediaResponse> {
+    app.ios_photos().create_photos(payload).await
+}
+
+#[command]
+pub(crate) async fn create_videos<R: Runtime>(
+    app: AppHandle<R>,
+    payload: CreateMediaRequest,
+) -> Result<CreateMediaResponse> {
+    app.ios_photos().create_videos(payload).await
+}

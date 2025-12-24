@@ -73,3 +73,28 @@ pub struct CheckAlbumCanOperationRequest {
 pub struct CheckAlbumCanOperationResponse {
     pub value: bool,
 }
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateAlbumRequest {
+    pub title: String,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateAlbumResponse {
+    pub value: String,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateMediaRequest {
+    pub album: String,
+    pub files: Vec<String>,
+}
+
+#[derive(Debug, Clone, Default, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct CreateMediaResponse {
+    pub value: Vec<String>,
+}

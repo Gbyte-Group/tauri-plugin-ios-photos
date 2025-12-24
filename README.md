@@ -11,7 +11,7 @@ Access and get iOS photos albums.
 - [x] Filter album.
 - [x] Check album permission.
 - [x] Access photo.
-- [ ] Create album.
-- [ ] Create photo.
+- [x] Create album.
+- [x] Create photo.
 - [ ] Remove album.
 - [ ] Remove photo.

@@ -95,6 +95,19 @@ export type CheckAlbumCanOperationRequest = {
   operation: PHCollectionEditOperation
 }
 
+export type CreateAlbumRequest = {
+  title: string
+}
+
+export type CreateMediaRequest = {
+  album: string
+  files: string[]
+}
+
+export type Identifier = string
+
+export type Identifiers = Identifier[]
+
 export async function requestPhotosAuth(): Promise<PhotosAuthorizationStatus | null> {
   return await invoke<{ value?: PhotosAuthorizationStatus }>(
     'plugin:ios-photos|request_photos_auth',
@@ -121,8 +134,26 @@ export async function requestAlbumMedias(payload: RequestAlbumMediasRequest): Pr
   }).then((r) => r.value ?? [])
 }
 
-export async function checkAlbumCanOperation(payload: CheckAlbumCanOperationRequest) {
+export async function checkAlbumCanOperation(
+  payload: CheckAlbumCanOperationRequest
+): Promise<boolean> {
   return await invoke<{ value?: boolean }>('plugin:ios-photos|check_album_can_operation', {
     payload
   }).then((r) => r.value ?? false)
+}
+
+export async function createAlbum(payload: CreateAlbumRequest): Promise<Identifier | null> {
+  return await invoke<{ value?: Identifier }>('plugin:ios-photos|create_album', { payload }).then(
+    (r) => r.value ?? null
+  )
+}
+export async function createPhotos(payload: CreateMediaRequest): Promise<Identifiers | null> {
+  return await invoke<{ value?: Identifiers }>('plugin:ios-photos|create_photos', { payload }).then(
+    (r) => r.value ?? []
+  )
+}
+export async function createVideos(payload: CreateMediaRequest): Promise<Identifiers | null> {
+  return await invoke<{ value?: Identifiers }>('plugin:ios-photos|create_videos', { payload }).then(
+    (r) => r.value ?? []
+  )
 }

@@ -2145,16 +2145,34 @@
           "markdownDescription": "Denies the unminimize command without any pre-configured scope."
         },
         {
-          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`",
+          "description": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`\n- `allow-create-album`\n- `allow-create-photos`\n- `allow-create-videos`",
           "type": "string",
           "const": "ios-photos:default",
-          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`"
+          "markdownDescription": "Default permissions for the plugin\n#### This default permission set includes:\n\n- `allow-request-photos-auth`\n- `allow-get-photos-auth-status`\n- `allow-request-albums`\n- `allow-request-album-medias`\n- `allow-check-album-can-operation`\n- `allow-create-album`\n- `allow-create-photos`\n- `allow-create-videos`"
         },
         {
           "description": "Enables the check_album_can_operation command without any pre-configured scope.",
           "type": "string",
           "const": "ios-photos:allow-check-album-can-operation",
           "markdownDescription": "Enables the check_album_can_operation command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the create_album command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:allow-create-album",
+          "markdownDescription": "Enables the create_album command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the create_photos command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:allow-create-photos",
+          "markdownDescription": "Enables the create_photos command without any pre-configured scope."
+        },
+        {
+          "description": "Enables the create_videos command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:allow-create-videos",
+          "markdownDescription": "Enables the create_videos command without any pre-configured scope."
         },
         {
           "description": "Enables the get_photos_auth_status command without any pre-configured scope.",
@@ -2185,6 +2203,24 @@
           "type": "string",
           "const": "ios-photos:deny-check-album-can-operation",
           "markdownDescription": "Denies the check_album_can_operation command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the create_album command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:deny-create-album",
+          "markdownDescription": "Denies the create_album command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the create_photos command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:deny-create-photos",
+          "markdownDescription": "Denies the create_photos command without any pre-configured scope."
+        },
+        {
+          "description": "Denies the create_videos command without any pre-configured scope.",
+          "type": "string",
+          "const": "ios-photos:deny-create-videos",
+          "markdownDescription": "Denies the create_videos command without any pre-configured scope."
         },
         {
           "description": "Denies the get_photos_auth_status command without any pre-configured scope.",

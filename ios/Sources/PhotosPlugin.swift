@@ -21,6 +21,15 @@ class CheckAlbumCanOperationArgs: Decodable {
   let operation: Int
 }
 
+class CreateAlbumArgs: Decodable {
+  let title: String
+}
+
+class CreateMediaArgs: Decodable {
+  let album: String
+  let files: [String]
+}
+
 public struct MediaItem: Encodable {
   public let id: String
   public let mediaType: Int
@@ -132,6 +141,56 @@ func getAlbumMedias(id: String, targetSize: CGSize, quality: CGFloat = 0.8) -> [
   return result
 }
 
+func createMedias(_ invoke: Invoke, _ isPhoto: Bool) throws {
+  let args: CreateMediaArgs = try invoke.parseArgs(CreateMediaArgs.self)
+  var albumLocalIdentifiers: [String] = []
+
+  if let album = PHAssetCollection.fetchAssetCollections(
+    withLocalIdentifiers: [args.album], options: nil
+  ).firstObject {
+    PHPhotoLibrary.shared().performChanges(
+      {
+        guard
+          let addAssetRequest = PHAssetCollectionChangeRequest(
+            for: album)
+        else {
+          invoke.reject("Create add asset request failed")
+          return
+        }
+
+        var requests: [PHObjectPlaceholder] = []
+
+        let createMediaAsset = { url in
+          isPhoto
+            ? PHAssetChangeRequest.creationRequestForAssetFromImage(atFileURL: url)
+            : PHAssetChangeRequest
+              .creationRequestForAssetFromVideo(atFileURL: url)
+        }
+
+        for file in args.files {
+          if let request: PHAssetChangeRequest =
+            createMediaAsset(URL(fileURLWithPath: file))
+          {
+            requests.append(request.placeholderForCreatedAsset!)
+            albumLocalIdentifiers.append(request.placeholderForCreatedAsset!.localIdentifier)
+          }
+        }
+
+        addAssetRequest.addAssets(requests as NSArray)
+      },
+      completionHandler: { success, error in
+        if success {
+          invoke.resolve(["value": albumLocalIdentifiers])
+        } else {
+          invoke.reject("error create photo \(String(describing: error))")
+        }
+      }
+    )
+  } else {
+    invoke.reject("not found album")
+  }
+}
+
 class PhotosPlugin: Plugin {
   @objc public func requestPhotosAuth(_ invoke: Invoke) throws {
     print("exec requestPhotosAuth methods")
@@ -192,6 +251,36 @@ class PhotosPlugin: Plugin {
       "value": album.canPerform(operation)
     ])
   }
+
+  @objc public func createAlbum(_ invoke: Invoke) throws {
+    let args: CreateAlbumArgs = try invoke.parseArgs(CreateAlbumArgs.self)
+    var albumLocalIdentifier: String?
+
+    PHPhotoLibrary.shared().performChanges(
+      {
+        let request: PHAssetCollectionChangeRequest =
+          PHAssetCollectionChangeRequest
+          .creationRequestForAssetCollection(withTitle: args.title)
+        albumLocalIdentifier = request.placeholderForCreatedAssetCollection.localIdentifier
+      },
+      completionHandler: { success, error in
+        if success, let id = albumLocalIdentifier {
+          invoke.resolve(["value": id])
+        } else {
+          invoke.reject("error create album \(String(describing: error))")
+        }
+      }
+    )
+  }
+
+  @objc public func createPhotos(_ invoke: Invoke) throws {
+    try createMedias(invoke, true)
+  }
+
+  @objc public func createVideos(_ invoke: Invoke) throws {
+    try createMedias(invoke, false)
+  }
+
 }
 
 @_cdecl("init_plugin_ios_photos")

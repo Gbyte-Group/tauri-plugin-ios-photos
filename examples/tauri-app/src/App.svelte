@@ -9,33 +9,41 @@
     getPhotosAuthStatus,
     requestAlbums,
     requestAlbumMedias,
-    checkAlbumCanOperation
+    checkAlbumCanOperation,
+    createPhotos,
+    createVideos
   } from 'tauri-plugin-ios-photos-api'
 
   let response = $state('')
-  let photoAuth = $state('未请求')
+  let photoAuth = $state('not request')
+  let albumID = $state('')
+  let msg = $state('')
+
   /**
    * @type { import('tauri-plugin-ios-photos-api').AlbumItem[] }
    */
   let albums = $state([])
+  /**
+   * @type { import('tauri-plugin-ios-photos-api').MediaItem[] }
+   */
   let medias = $state([])
 
   function matchStatus(status) {
     switch (status) {
       case PhotosAuthorizationStatus.authorized:
-        photoAuth = '已授权'
+        photoAuth = 'authorized'
         break
       case PhotosAuthorizationStatus.denied:
-        photoAuth = '拒绝'
+        photoAuth = 'denied'
         break
       case PhotosAuthorizationStatus.limited:
-        photoAuth = '被限制'
+        photoAuth = 'limited'
         break
       case PhotosAuthorizationStatus.restricted:
-        photoAuth = '有限的'
+        photoAuth = 'restricted'
         break
       case PhotosAuthorizationStatus.notDetermined:
-        photoAuth = '非持久的'
+        photoAuth = 'notDetermined'
         break
     }
   }
@@ -95,6 +103,20 @@
         console.log('request media finish')
       })
   }
+
+  function createMedia(file) {
+    console.log({ file, albumID })
+
+    const fn = file.endsWith('.mp4') ? createVideos : createPhotos
+
+    fn({
+      album: albumID,
+      files: [file]
+    }).then((ids) => {
+      console.log({ ids })
+      msg += '<br/>' + ids.join('<br/>')
+    })
+  }
 </script>
 
 <main class="container">
@@ -136,7 +158,11 @@
   <p>Click on the Tauri, Vite, and Svelte logos to learn more.</p>
 
   <div class="row">
-    <Greet />
+    <Greet
+      receiveID={(id) => {
+        albumID = id
+      }}
+    />
   </div>
 
   <div>
@@ -146,6 +172,7 @@
     <div>{@html photoAuth}</div>
     <button onclick={getAlbums}>get normal albums</button>
     <button onclick={getSmartAlbums}>get smart albums</button>
+    <div>{@html msg}</div>
     <ul>
       {#each albums as album}
         <li
@@ -158,7 +185,7 @@
     </ul>
     <ul>
       {#each medias as media}
-        <li>
+        <li onclick={() => createMedia(media.data)}>
           <img
             src={`temp:/${media?.data ?? ''}`}
             alt={media.id}
