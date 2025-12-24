@@ -1,8 +1,9 @@
 {
-  "name": "tauri-plugin-ios-photos-api",
+  "name": "@gbyte/tauri-plugin-ios-photos",
   "version": "0.1.0",
-  "author": "You",
-  "description": "",
+  "author": "Gbyte",
+  "license": "MIT",
+  "description": "Access iOS user device photo library.",
   "type": "module",
   "types": "./dist-js/index.d.ts",
   "main": "./dist-js/index.cjs",
@@ -29,5 +30,29 @@
     "rollup": "^4.9.6",
     "typescript": "^5.3.3",
     "tslib": "^2.6.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Gbyte-Group/tauri-plugin-ios-photos.git"
+  },
+  "homepage": "https://github.com/Gbyte-Group/tauri-plugin-ios-photos#readme",
+  "bugs": {
+    "url": "https://github.com/Gbyte-Group/tauri-plugin-ios-photos/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "tauri",
+    "tauri-plugin",
+    "iOS",
+    "photo",
+    "app",
+    "mobile",
+    "native",
+    "rust",
+    "swift",
+    "typescript"
+  ]
 }
