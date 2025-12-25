@@ -58,7 +58,7 @@ Add the plugin to your Tauri project's `Cargo.toml`:
 
 ```toml
 [dependencies]
-tauri-plugin-ios-photo = "0.1"
+tauri-plugin-ios-photos = "0.1"
 ```
 
 Configure the plugin permissions in your `capabilities/default.json`:
@@ -128,6 +128,36 @@ requestPhotosAuth()
   })
 
 ```
+
+---
+
+## About Image Path Access
+
+The image paths returned by this plugin are local file paths, typically pointing to internal iOS sandbox locations.
+
+In Tauri (especially on iOS / WebView environments), these local paths cannot be accessed directly by the frontend (e.g. via file:// or raw filesystem paths). This is due to WebView security and sandbox restrictions.
+
+Before using these images in the frontend, you must expose them through a Tauri custom protocol (URI scheme) so they can be accessed as normal URLs.
+
+Recommended approach:
+
+1. Register a custom URI scheme in Tauri (for example, temp://)
+
+2. When the frontend requests temp://<local-path>:
+
+  - Tauri reads the corresponding local file
+
+  - Returns the binary data with the correct MIME type
+
+3. The frontend can then use the URL normally (e.g. <img src="temp://..." />)
+
+> ⚠️ Notes:
+>
+> - This plugin does not automatically convert local paths into accessible URLs
+>
+> - Implementing the custom protocol is the responsibility of the application
+>
+> - For security reasons, it is recommended to restrict the accessible path scope
 
 ---
 
