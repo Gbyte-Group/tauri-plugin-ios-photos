@@ -2,7 +2,7 @@
 name = "tauri-plugin-ios-photos"
 version = "0.1.0"
 authors = ["Gbyte"]
-description = ""
+description = "Access iOS user device photo library."
 edition = "2021"
 rust-version = "1.77.2"
 exclude = ["/examples", "/dist-js", "/guest-js", "/node_modules", "/.cargo"]
