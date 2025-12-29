@@ -21,6 +21,7 @@
   let photoAuth = $state('not request')
   let albumID = $state('')
   let msg = $state('')
+  let subtype = $state(PHAssetCollectionSubtype.albumRegular)
 
   /**
    * @type { import('tauri-plugin-ios-photos-api').AlbumItem[] }
@@ -63,7 +64,7 @@
   function getSmartAlbums() {
     requestAlbums({
       with: PHAssetCollectionType.smartAlbum,
-      subtype: PHAssetCollectionSubtype.albumRegular
+      subtype
     }).then((value) => {
       console.log({ value })
       albums = value
@@ -73,7 +74,7 @@
   function getAlbums() {
     requestAlbums({
       with: PHAssetCollectionType.album,
-      subtype: PHAssetCollectionSubtype.albumRegular
+      subtype
     }).then((value) => {
       console.log({ value })
       albums = value
@@ -222,6 +223,13 @@
     <button onclick={getAlbums}>get normal albums</button>
     <button onclick={getSmartAlbums}>get smart albums</button>
     <div>{@html msg}</div>
+    <input
+      type="number"
+      value={subtype}
+      onchange={(e) => {
+        subtype = e.target.valueAsNumber
+      }}
+    />
     <ul>
       {#each albums as album}
         <li

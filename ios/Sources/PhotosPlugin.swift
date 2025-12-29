@@ -282,7 +282,10 @@ class PhotosPlugin: Plugin {
       invoke.reject("Not parse arg with \"\(args.with)\" to PHAssetCollectionType")
       return
     }
-    guard let subtype = PHAssetCollectionSubtype.init(rawValue: args.subtype) else {
+
+    let subtype = args.subtype == -1 ? 9_223_372_036_854_775_807 : args.subtype
+
+    guard let subtype = PHAssetCollectionSubtype.init(rawValue: subtype) else {
       invoke.reject("Not parse arg subtype \"\(args.subtype)\" to PHAssetCollectionSubtype")
       return
     }

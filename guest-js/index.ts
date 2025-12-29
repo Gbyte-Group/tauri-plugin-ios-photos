@@ -77,7 +77,7 @@ export const PHAssetCollectionSubtype = {
   smartAlbumRAW: 217,
   smartAlbumCinematic: 218,
   smartAlbumSpatial: 219,
-  any: 9223372036854775807n
+  any: -1
 }
 
 export type PhotosAuthorizationStatus =
