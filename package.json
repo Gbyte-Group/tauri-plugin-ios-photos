@@ -1,6 +1,6 @@
 {
   "name": "@gbyte/tauri-plugin-ios-photos",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Gbyte",
   "license": "MIT",
   "description": "Access iOS user device photo library.",

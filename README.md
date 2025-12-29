@@ -58,8 +58,10 @@ Add the plugin to your Tauri project's `Cargo.toml`:
 
 ```toml
 [dependencies]
-tauri-plugin-ios-photos = "0.1"
+tauri-plugin-ios-photos = "0.2"
 ```
+
+Or use `cargo add tauri-plugin-ios-photos`.
 
 Configure the plugin permissions in your `capabilities/default.json`:
 
