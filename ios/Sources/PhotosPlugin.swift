@@ -1,7 +1,9 @@
+import AVFoundation
 import Photos
 import SwiftRs
 import Tauri
 import UIKit
+import UniformTypeIdentifiers
 import WebKit
 
 class GetAlbumArgs: Decodable {
@@ -96,12 +98,68 @@ func writeTempFile(_ data: Data, _ ext: String) -> String? {
   }
 }
 
-func getAlbumMedias(id: String, targetSize: CGSize, quality: CGFloat = 0.8) -> [MediaItem] {
+func exportVideo(asset: PHAsset, completion: @escaping (URL?) -> Void) {
+  let options = PHVideoRequestOptions()
+
+  options.version = .current
+  options.deliveryMode = .fastFormat
+  options.isNetworkAccessAllowed = true  // download iCloud asset
+
+  PHImageManager.default().requestExportSession(
+    forVideo: asset,
+    options: options,
+    exportPreset: AVAssetExportPresetMediumQuality
+  ) { exportSession, _ in
+
+    guard let exportSession = exportSession else {
+      completion(nil)
+      return
+    }
+
+    guard let fileType = exportSession.supportedFileTypes.first else {
+      completion(nil)
+      return
+    }
+
+    let fileExt = {
+      switch fileType {
+      case .mov:
+        return "mov"
+      case .m4v:
+        return "m4v"
+      default:
+        return "mp4"
+      }
+    }()
+
+    let tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
+      .appendingPathComponent(UUID().uuidString)
+      .appendingPathExtension(fileExt)
+
+    exportSession.outputFileType = fileType
+
+    exportSession.outputURL = tempURL
+
+    exportSession.exportAsynchronously {
+      switch exportSession.status {
+      case .completed:
+        completion(tempURL)
+      default:
+        completion(nil)
+      }
+    }
+  }
+}
+
+func getAlbumMedias(
+  id: String, targetSize: CGSize, quality: CGFloat = 0.8,
+  completion: @escaping ([MediaItem]) -> Void
+) {
   var result: [MediaItem] = []
   let albums = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [id], options: nil)
   let pmanager = PHImageManager.default()
-  let amanager = PHAssetResourceManager.default()
   let options = PHImageRequestOptions()
+  let group = DispatchGroup()
 
   options.deliveryMode = .highQualityFormat
   options.isSynchronous = true
@@ -125,29 +183,34 @@ func getAlbumMedias(id: String, targetSize: CGSize, quality: CGFloat = 0.8) -> [
               item.data = writeTempFile(jpg, "jpg")
             }
           }
+
+          // PHImageRequestOptions.isSynchronous is true
+          // so can sync append jpg item
+          result.append(item)
         }
       case .video:
-        let resource = PHAssetResource.assetResources(for: media)
-        if let resource = resource.first(where: { $0.type == .video }) {
-          let buffer = NSMutableData()
-          amanager.requestData(for: resource, options: nil) { chunk in
-            buffer.append(chunk)
-          } completionHandler: { error in
-            if error == nil {
-              // item.data = (buffer as Data).base64EncodedString()
-              item.data = writeTempFile(buffer as Data, "mp4")
-            }
+        group.enter()
+
+        exportVideo(asset: media) { url in
+
+          defer { group.leave() }
+
+          if let path = url?.path {
+            item.data = path
           }
+          // PHImageRequestOptions.isSynchronous not work on request video
+          // so must move append item to callback
+          result.append(item)
         }
       default:
         break
       }
-
-      result.append(item)
     }
   }
 
-  return result
+  group.notify(queue: .main) {
+    completion(result)
+  }
 }
 
 func createMedias(_ invoke: Invoke, _ isPhoto: Bool) throws {
@@ -295,11 +358,13 @@ class PhotosPlugin: Plugin {
 
   @objc public func requestAlbumMedias(_ invoke: Invoke) throws {
     let args = try invoke.parseArgs(GetAlbumMediasArgs.self)
-    invoke.resolve([
-      "value": getAlbumMedias(
-        id: args.id, targetSize: CGSize(width: args.width, height: args.height),
-        quality: args.quality)
-    ])
+
+    getAlbumMedias(
+      id: args.id, targetSize: CGSize(width: args.width, height: args.height),
+      quality: args.quality
+    ) { medias in
+      invoke.resolve(["value": medias])
+    }
   }
 
   @objc public func checkAlbumCanOperation(_ invoke: Invoke) throws {

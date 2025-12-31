@@ -244,10 +244,17 @@
     <ul>
       {#each medias as media}
         <li onclick={() => createMedia(media.data)}>
-          <img
-            src={`temp:/${media?.data ?? ''}`}
-            alt={media.id}
-          />
+          {#if media.mediaType === 1}
+            <img
+              src={`temp:/${media?.data ?? ''}`}
+              alt={media.id}
+            />
+          {:else if media.mediaType === 2}
+            <video
+              src={`temp:/${media?.data ?? ''}`}
+              controls
+            ></video>
+          {/if}
           <button onclick={() => deleteSelectAlbumMedias([media.id])}>delete</button>
           <button onclick={() => removeSelectAlbumMedias([media.id])}>remove</button>
         </li>
